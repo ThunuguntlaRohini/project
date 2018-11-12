@@ -19,27 +19,27 @@ public class PaytmServiceImpl implements IPaytmService {
 	}
 
 	@Override
-	public double deposit(double amount, Long phnNo) {
-		// TODO Auto-generated method stub
-		return dao.deposit(amount, phnNo);
+	public boolean deposit(double amount) {
+
+		return dao.deposit(amount);
 	}
 
 	@Override
-	public double withDraw(double amount,  Long phnNo) {
+	public boolean withDraw(double amount) {
 
-		return dao.withDraw(amount, phnNo);
+		return dao.withDraw(amount);
 	}
 
 	@Override
-	public double fundTransfer(double amount,Long phnNo, Long transPhnNo) throws PaytmException {
+	public boolean fundTransfer(double amount, Long transPhnNo) throws PaytmException {
 
-		return dao.fundTransfer(amount, phnNo, transPhnNo);
+		return dao.fundTransfer(amount, transPhnNo);
 	}
 
 	@Override
-	public double showBalance(Long phnNo) {
+	public double showBalance() {
 
-		return dao.showBalance(phnNo);
+		return dao.showBalance();
 	}
 
 	@Override
@@ -50,10 +50,10 @@ public class PaytmServiceImpl implements IPaytmService {
 	
 	public boolean validate(Customer customer) throws PaytmException {
 		
-		if(!(customer.getFirstName().matches("[A-Za-z]{3,15}")) || (customer.getFirstName()==null)) {
+		if(!(customer.getFirstName().matches("[A-Za-z]{3,15}"))) {
 			throw new PaytmException("First name should have atleast 3 characters");
 		}
-		if(!(customer.getLastName().matches("[A-Za-z]{3,15}")) || (customer.getLastName()==null)) {
+		if(!(customer.getLastName().matches("[A-Za-z]{3,15}"))) {
 			throw new PaytmException("Last name should have atleast 3 characters");
 		}
 		if(!(customer.getMail().matches("[a-z0-9]{6,15}[@][a-z]{4,10}[.][c][o][m]"))) {
@@ -66,9 +66,12 @@ public class PaytmServiceImpl implements IPaytmService {
 			throw new PaytmException("Adhar number should have 12 digits");
 		}
 		return true;
-		
 	}
 
-	
+	@Override
+	public boolean validatePin(int pin) {
+		// TODO Auto-generated method stub
+		return dao.validatePin(pin);
+	}
 
 }

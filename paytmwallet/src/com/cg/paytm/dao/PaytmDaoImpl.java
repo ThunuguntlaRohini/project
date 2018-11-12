@@ -12,7 +12,7 @@ import com.cg.paytm.exception.PaytmException;
 public class PaytmDaoImpl implements IPaytmDao {
 
 	static ArrayList<Trans> transList = new ArrayList<>();
-	static Customer customer = new Customer();
+
 
 	public boolean createAccount(Customer customer1) {
 
@@ -20,58 +20,73 @@ public class PaytmDaoImpl implements IPaytmDao {
 	}
 
 	@Override
-	public boolean deposit(double amount) {
-		customer.setBalance(customer.getBalance() + amount);
-		Trans trans = new Trans();
-		trans.setAmount(amount);
-		trans.setTransType("Deposit");
-		trans.setDate(LocalDate.now());
-		trans.setTime(LocalTime.now());
-		trans.setTo("self");
-		transList.add(trans);
-		return true;
-	}
-
-	@Override
-	public boolean withDraw(double amount) {
-		if (amount < customer.getBalance() - amount) {
-			customer.setBalance(customer.getBalance() - amount);
+	public double deposit(double amount, Long phnNo) {
+		Customer customer = Database.validatePhnNo(phnNo);
+		double balance=0;
+		if (customer!=null) {
+			customer.setBalance(customer.getBalance() + amount);
 			Trans trans = new Trans();
 			trans.setAmount(amount);
-			trans.setTransType("Withdraw");
+			trans.setTransType("Deposit");
 			trans.setDate(LocalDate.now());
 			trans.setTime(LocalTime.now());
+			trans.setTo("self");
 			transList.add(trans);
-			return true;
-		} else {
-			return false;
+			balance=customer.getBalance();
 		}
+		return balance;
 	}
 
 	@Override
-	public boolean fundTransfer(double amount, Long transPhnNo) throws PaytmException {
-		Boolean isValid = Database.validate(transPhnNo);
-		if (isValid) {
+	public double withDraw(double amount, Long phnNo) {
+		Customer customer = Database.validatePhnNo(phnNo);
+		double balance=0;
+		if (customer!=null) {
 			if (amount < customer.getBalance() - amount) {
 				customer.setBalance(customer.getBalance() - amount);
 				Trans trans = new Trans();
 				trans.setAmount(amount);
-				trans.setTransType("Funds transfer");
+				trans.setTransType("Withdraw");
 				trans.setDate(LocalDate.now());
 				trans.setTime(LocalTime.now());
-				trans.setTo(transPhnNo.toString());
 				transList.add(trans);
-				return true;
+				balance = customer.getBalance();
 			}
-		}else {
-			throw new PaytmException("invalid phn number");
 		}
-		return false;
+		return balance;
 	}
 
 	@Override
-	public double showBalance() {
+	public double fundTransfer(double amount, Long phnNo, Long transPhnNo) throws PaytmException {
+		Customer customerBean1 = Database.validatePhnNo(phnNo);
+		double balance = 0;
+		if (customerBean1!=null) {
+			Customer customerBean2	 = Database.validatePhnNo(transPhnNo);
+			if (customerBean2!=null) {
+				if (amount < customerBean1.getBalance() - amount) {
+					customerBean1.setBalance(customerBean1.getBalance() - amount);
+					Trans trans = new Trans();
+					trans.setAmount(amount);
+					trans.setTransType("Funds transfer");
+					trans.setDate(LocalDate.now());
+					trans.setTime(LocalTime.now());
+					trans.setTo(transPhnNo.toString());
+					transList.add(trans);
+					balance = customerBean1.getBalance();
+					
+				}
+			} else {
+				throw new PaytmException("invalid phn number");
+			}
+		}
+		return balance;
 
+	}
+
+	@Override
+	public double showBalance(Long phnNo) {
+		
+		Customer customer = Database.validatePhnNo(phnNo);
 		return customer.getBalance();
 	}
 
@@ -79,12 +94,6 @@ public class PaytmDaoImpl implements IPaytmDao {
 	public ArrayList<Trans> printTransactions() {
 
 		return transList;
-	}
-
-	@Override
-	public boolean validatePin(int pin) {
-		// TODO Auto-generated method stub
-		return Database.validatePin(pin);
 	}
 
 }

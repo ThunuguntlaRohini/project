@@ -10,14 +10,16 @@ public interface IPaytmDao {
 
 	boolean createAccount(Customer customer);
 
-	double deposit(double amount, Long phnNo);
+	boolean deposit(double amount);
+
+	boolean withDraw(double amount);
+
+	double showBalance();
 
 	ArrayList<Trans> printTransactions();
 
-	double fundTransfer(double amount, Long phnNo, Long transPhnNo) throws PaytmException;
+	boolean fundTransfer(double amount, Long transPhnNo) throws PaytmException;
 
-	double withDraw(double amount, Long phnNo);
-
-	double showBalance(Long phnNo);
+	boolean validatePin(int pin);
 
 }

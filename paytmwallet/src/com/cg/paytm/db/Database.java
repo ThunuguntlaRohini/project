@@ -8,14 +8,36 @@ import com.cg.paytm.bean.Customer;
 public class Database {
 
 	static List<Customer> customerDetails = new ArrayList<>();
-
-	static List<Long> customers = new ArrayList<>();
 	static {
-		customers.add(9290872465l);
-		customers.add(9247144559l);
-		customers.add(9248444559l);
-		customers.add(9297307567l);
-		customers.add(9966472238l);
+		Customer c1= new Customer();
+		c1.setFirstName("sasi");
+		c1.setLastName("devi");
+		c1.setPhnNo(9247144559l);
+		c1.setAdharNo(123456789123l);
+		c1.setBalance(5000.00);
+		c1.setMail("sasidevi@gmail.com");
+		customerDetails.add(c1);
+	
+		Customer c2= new Customer();
+		c2.setFirstName("manu");
+		c2.setLastName("ranjan");
+		c2.setPhnNo(9297307567l);
+		c2.setAdharNo(456789123456l);
+		c2.setBalance(7000.00);
+		c2.setMail("manoranjan@gmail.com");
+		customerDetails.add(c2);
+	
+		Customer c3= new Customer();
+		c3.setFirstName("satya");
+		c3.setLastName("narayana");
+		c3.setPhnNo(9248444559l);
+		c3.setAdharNo(789123456789l);
+		c3.setBalance(6000.00);
+		c3.setMail("satyanarayana@gmail.com");
+		customerDetails.add(c3);
+	
+	
+		
 	}
 
 	public static boolean addAccount(Customer customer) {
@@ -23,24 +45,18 @@ public class Database {
 		return customerDetails.add(customer);
 	}
 
-	public static boolean validate(Long transphnno) {
-		boolean isValid = false;
-		for (Long phnno : customers)
-			if (phnno.equals(transphnno))
-				isValid = true;
 
-		return isValid;
+	public static Customer validatePhnNo(Long phnNo) {
+		Customer customer=null;
+		for (Customer customer1 : customerDetails)
+			if (phnNo ==(customer.getPhnNo()))
+				customer=customer1;
+			
 
-	}
-
-	public static boolean validatePin(int pin) {
-		boolean isValid = false;
-		for (Customer customer : customerDetails)
-			if (pin == customer.getPin())
-				isValid = true;
-
-		return isValid;
+		return customer;
 
 	}
+
+	
 
 }

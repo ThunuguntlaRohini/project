@@ -93,48 +93,79 @@ public class Client {
 	}
 
 	private static void deposit() throws PaytmException {
-		System.out.println("enter phnNo");
-		Long phnNo = sc.nextLong();
-		System.out.println("Enter the Amount to deposit");
-		double amount = sc.nextDouble();
+		System.out.println("enter pin");
+		int pin = sc.nextInt();
+		boolean isValid = service.validatePin(pin);
+		if (isValid) {
+			System.out.println("Enter the Amount to Deposit");
+			double amount = sc.nextDouble();
+			if (amount <= 0) {
+				throw new PaytmException("amount should be positive value");
+			}
 
-		double balance = service.deposit(amount, phnNo);
-		System.out.println("deposited succesfully");
-		System.out.println("current balance :"+balance);
+			boolean isDeposited = service.deposit(amount);
+
+			if (isDeposited) {
+				System.out.println("deposited Sucessfully");
+			} else {
+				System.out.println("Not deposited");
+			}
+		} else {
+			System.out.println("invalid pin");
+		}
+
 	}
 
 	private static void withDraw() throws PaytmException {
-		System.out.println("enter phnNo");
-		Long phnNo = sc.nextLong();
+		System.out.println("enter pin");
+		int pin = sc.nextInt();
+		boolean isValid = service.validatePin(pin);
+		if (isValid) {
+			System.out.println("Enter the Amount to Withdraw");
+			double amount = sc.nextDouble();
+			if (amount <= 0) {
+				throw new PaytmException("amount should be positive value");
+			}
+			boolean isWithdrawn = service.withDraw(amount);
 
-		System.out.println("Enter the Amount to Withdraw");
-		double amount = sc.nextDouble();
-
-		double balance = service.withDraw(amount, phnNo);
-		System.out.println("withdrawn succesfully");
-		System.out.println("current balance :"+balance);
+			if (isWithdrawn) {
+				System.out.println("Withdrawn Sucessfully");
+			} else {
+				System.out.println("Insufficient Balance");
+			}
+		} else {
+			System.out.println("invalid pin");
+		}
 
 	}
 
 	private static void fundsTransfer() throws PaytmException {
-		System.out.println("enter phnNo");
-		Long phnNo = sc.nextLong();
+		System.out.println("enter pin");
+		int pin = sc.nextInt();
+		boolean isValid = service.validatePin(pin);
+		if (isValid) {
+			System.out.println("Enter the Phone Number to transfer Funds");
+			long transPhnNo = sc.nextLong();
+			System.out.println("Enter the Amount to Transfer");
+			double amount = sc.nextDouble();
+			if (amount <= 0) {
+				throw new PaytmException("amount should be positive value");
+			}
+			boolean isTransferred = service.fundTransfer(amount, transPhnNo);
 
-		System.out.println("Enter the Phone Number to transfer Funds");
-		long transPhnNo = sc.nextLong();
-		System.out.println("Enter the Amount to Transfer");
-		double amount = sc.nextDouble();
+			if (isTransferred) {
+				System.out.println("Transferred Sucessfully");
+			} else {
+				System.out.println("Insufficient Balance");
+			}
+		} else {
+			System.out.println("invalid pin");
+		}
 
-		double balance = service.fundTransfer(amount, phnNo, transPhnNo);
-		System.out.println("funds transferred succesfully");
-		System.out.println("current balance :"+balance);
 	}
 
 	private static void showbalance() {
-		System.out.println("enter phnNo");
-		Long phnNo = sc.nextLong();
-		
-		Double balance = service.showBalance(phnNo);
+		Double balance = service.showBalance();
 		System.out.println("Your  Current Balance is : " + balance);
 
 	}

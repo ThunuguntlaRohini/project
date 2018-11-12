@@ -10,16 +10,18 @@ public interface IPaytmService {
 
 	boolean createAccount(Customer customer) throws PaytmException;
 
-	double deposit(double amount, Long phnNo);
+	boolean deposit(double amount);
 
-	double showBalance(Long phnNo);
+	boolean withDraw(double amount);
+
+	double showBalance();
 
 	ArrayList<Trans> printTransactions();
 
-	public boolean validate(Customer customer) throws PaytmException;
+	boolean fundTransfer(double amount, Long transPhnNo) throws PaytmException;
 
-	double withDraw(double amount, Long phnNo);
+	boolean validatePin(int pin);
 
-	double fundTransfer(double amount, Long phnNo, Long transPhnNo) throws PaytmException;
+	boolean validate(Customer customer) throws PaytmException;
 
 }
